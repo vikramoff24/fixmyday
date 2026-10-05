@@ -240,6 +240,7 @@ function extractPriority(clause: string): { priority: TaskPriority | null; rest:
 export function toTitle(fragment: string): string {
   let title = fragment
     .replace(/\s+/g, " ")
+    .replace(/^[\s:;,.!?\-–—]+/, "")
     .trim()
     .replace(LEADING_FILLER, "")
     .replace(/\b(my|some)\s+/g, "")

@@ -31,6 +31,7 @@ describe("toTitle", () => {
     expect(toTitle("go to the gym")).toBe("Gym");
     expect(toTitle("call my mom")).toBe("Call Mom");
     expect(toTitle("spend  learning ai")).toBe("Learn AI");
+    expect(toTitle(": pay rent")).toBe("Pay rent");
   });
 });
 
