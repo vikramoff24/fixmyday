@@ -2,6 +2,7 @@
 
 import { Spark } from "@/components/shared/spark";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
+import { PLANNER_SHEET_INPUT_ID } from "@/config/dom-ids";
 import { MOBILE_QUERY, useMediaQuery } from "@/hooks/use-media-query";
 import { PlannerPanel } from "./planner-panel";
 
@@ -16,7 +17,15 @@ export function PlannerSheet({ open, onOpenChange }: PlannerSheetProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side={isMobile ? "bottom" : "right"} className="overflow-y-auto md:max-w-xl">
+      <SheetContent
+        side={isMobile ? "bottom" : "right"}
+        className="overflow-y-auto md:max-w-xl"
+        // Open straight into typing: capture is the whole point of this sheet.
+        onOpenAutoFocus={(event) => {
+          event.preventDefault();
+          document.getElementById(PLANNER_SHEET_INPUT_ID)?.focus();
+        }}
+      >
         <div className="flex flex-col gap-5 px-5 pt-5 pb-8">
           <div className="flex items-center gap-2 pr-8">
             <Spark className="size-[18px]" />
@@ -25,7 +34,7 @@ export function PlannerSheet({ open, onOpenChange }: PlannerSheetProps) {
           <SheetDescription className="-mt-3">
             Tell me everything on your mind. I&apos;ll turn it into a realistic plan.
           </SheetDescription>
-          <PlannerPanel autoFocus onAccepted={() => onOpenChange(false)} />
+          <PlannerPanel inputId={PLANNER_SHEET_INPUT_ID} onAccepted={() => onOpenChange(false)} />
         </div>
       </SheetContent>
     </Sheet>

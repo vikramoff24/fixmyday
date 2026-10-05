@@ -12,6 +12,7 @@ import { PlannerInput } from "./planner-input";
 import { PlannerThinking } from "./planner-thinking";
 
 type PlannerPanelProps = {
+  inputId?: string;
   autoFocus?: boolean;
   className?: string;
   onAccepted?: (count: number) => void;
@@ -20,7 +21,7 @@ type PlannerPanelProps = {
 const BUSY_LABELS = { accepting: "Saving your plan…", reorganizing: "Reorganizing…" } as const;
 
 /** Thoughts → AI → Plan → Action, in one self-contained component. */
-export function PlannerPanel({ autoFocus, className, onAccepted }: PlannerPanelProps) {
+export function PlannerPanel({ inputId, autoFocus, className, onAccepted }: PlannerPanelProps) {
   const planner = usePlanner({ onAccepted });
   const { state } = planner;
   const isThinking = state.status === "thinking";
@@ -29,6 +30,7 @@ export function PlannerPanel({ autoFocus, className, onAccepted }: PlannerPanelP
     <div className={cn("flex flex-col gap-4", className)}>
       {state.status !== "draft" && (
         <PlannerInput
+          inputId={inputId}
           value={planner.input}
           onChange={planner.setInput}
           onSubmit={planner.submit}

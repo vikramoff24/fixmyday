@@ -16,6 +16,7 @@ const EXAMPLES = [
 ];
 
 type PlannerInputProps = {
+  inputId?: string;
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
@@ -27,6 +28,7 @@ type PlannerInputProps = {
 
 /** The signature capture field: type everything on your mind, press Enter. */
 export function PlannerInput({
+  inputId = PLANNER_INPUT_ID,
   value,
   onChange,
   onSubmit,
@@ -54,12 +56,12 @@ export function PlannerInput({
         onClick={() => textareaRef.current?.focus()}
       >
         <Spark className="pointer-events-none absolute top-[18px] left-4 size-[18px]" />
-        <label htmlFor={PLANNER_INPUT_ID} className="sr-only">
+        <label htmlFor={inputId} className="sr-only">
           What&apos;s on your mind?
         </label>
         <textarea
           ref={textareaRef}
-          id={PLANNER_INPUT_ID}
+          id={inputId}
           value={value}
           autoFocus={autoFocus}
           disabled={disabled}
