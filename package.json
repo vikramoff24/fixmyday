@@ -16,7 +16,8 @@
     "db:migrate": "node --env-file-if-exists=.env.local node_modules/drizzle-kit/bin.cjs migrate",
     "db:studio": "node --env-file-if-exists=.env.local node_modules/drizzle-kit/bin.cjs studio",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "db:seed": "node --env-file-if-exists=.env.local scripts/seed-demo.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.9.10",
