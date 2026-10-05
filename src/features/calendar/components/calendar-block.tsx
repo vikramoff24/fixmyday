@@ -49,7 +49,8 @@ export function CalendarBlock({
   const visibleMinutes = Math.max(durationMinutes, MIN_BLOCK_MINUTES);
   const top = (shown.startMinutes / 60) * hourHeight;
   const height = (visibleMinutes / 60) * hourHeight - 2;
-  const isShort = visibleMinutes <= 40;
+  // Below ~50 minutes there is only room for one line of text.
+  const isShort = visibleMinutes < 50;
   const completed = isTaskCompleted(task);
   const timeRange = `${formatMinutes(shown.startMinutes)}–${formatMinutes(shown.startMinutes + durationMinutes)}`;
 
