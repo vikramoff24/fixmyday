@@ -20,7 +20,7 @@ const TEMPLATES = [
   { title: "Write project update", category: "work", priority: "medium", minutes: 30, hour: 11 },
   { title: "Deep work: feature build", category: "work", priority: "high", minutes: 120, hour: 9 },
   { title: "Gym", category: "health", priority: "medium", minutes: 60, hour: 18 },
-  { title: "Evening run", category: "health", priority: "medium", minutes: 40, hour: 7 },
+  { title: "Morning run", category: "health", priority: "medium", minutes: 40, hour: 7 },
   { title: "Learn AI: course module", category: "learning", priority: "low", minutes: 45, hour: 20 },
   { title: "Read 20 pages", category: "learning", priority: "low", minutes: 30, hour: 21 },
   { title: "Groceries", category: "personal", priority: "medium", minutes: 40, hour: 19 },
@@ -49,12 +49,14 @@ const now = new Date();
 for (let daysAgo = 27; daysAgo >= 1; daysAgo--) {
   const day = new Date(now.getTime() - daysAgo * 86_400_000);
   const count = 2 + Math.floor(random() * 4);
+  const usedTitles = new Set();
   for (let index = 0; index < count; index++) {
     const template = TEMPLATES[Math.floor(random() * TEMPLATES.length)];
-    // Use the server's local midnight as an approximation; fine for demo data.
-    const start = new Date(day);
-    start.setHours(template.hour, random() > 0.5 ? 30 : 0, 0, 0);
-    const done = random() < 0.78;
+    if (usedTitles.has(template.title)) continue;
+    usedTitles.add(template.title);
+    const start = zonedTime(dateKeyFor(day), template.hour, random() > 0.5 ? 30 : 0);
+    // Most past tasks get done; a few are left open to show "carried over".
+    const done = random() < (daysAgo > 3 ? 0.95 : 0.7);
     const completedAt = done ? new Date(start.getTime() + (template.minutes + 10) * 60_000) : null;
     rows.push({
       user_id: userId,
