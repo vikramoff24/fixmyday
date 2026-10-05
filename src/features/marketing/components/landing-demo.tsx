@@ -116,7 +116,8 @@ export function LandingDemo() {
       <div className="rounded-2xl border border-border-strong bg-card/80 p-2 shadow-elevated backdrop-blur">
         <div className="flex min-h-[76px] items-start gap-3 rounded-xl bg-background/60 px-4 py-4">
           <Spark className="mt-0.5 size-[18px]" />
-          <p className="text-[15px] leading-relaxed" aria-label={scenario.input}>
+          <p className="text-[15px] leading-relaxed">
+            <span className="sr-only">{scenario.input}</span>
             <span aria-hidden>
               {scenario.input.slice(0, visibleLength)}
               {visiblePhase === "typing" && (

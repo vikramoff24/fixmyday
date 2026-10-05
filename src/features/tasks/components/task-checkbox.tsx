@@ -34,7 +34,7 @@ export function TaskCheckbox({ checked, onCheckedChange, label, className }: Tas
           "flex size-[18px] items-center justify-center rounded-full border-[1.5px] transition-colors duration-200",
           checked
             ? "border-success bg-success"
-            : "border-border-strong group-hover/check:border-muted-foreground",
+            : "border-subtle-foreground group-hover/check:border-muted-foreground",
         )}
       >
         <svg viewBox="0 0 16 16" className="size-3" aria-hidden>
