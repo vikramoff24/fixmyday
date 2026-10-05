@@ -94,5 +94,7 @@ function toAppError(error: unknown): AppError {
       cause: `OpenAI API error ${error.status ?? "unknown"}`,
     });
   }
-  return new AppError("AI_UNAVAILABLE", "The AI service had a problem. Please try again.", { cause: error });
+  return new AppError("AI_UNAVAILABLE", "The AI service had a problem. Please try again.", {
+    cause: error instanceof Error ? `${error.name}: ${error.message}` : "Unknown error",
+  });
 }
