@@ -48,20 +48,6 @@ export function CommandPalette({ open, onOpenChange, onCreateTask, onPlan }: Com
           <CommandList>
             <CommandEmpty>No matching commands.</CommandEmpty>
 
-            {trimmedQuery && (
-              <CommandGroup heading="Search">
-                <CommandItem
-                  value={`search tasks ${trimmedQuery}`}
-                  onSelect={() =>
-                    run(() => router.push(`/tasks?view=all&q=${encodeURIComponent(trimmedQuery)}`))
-                  }
-                >
-                  <Search />
-                  Search tasks for “{trimmedQuery}”
-                </CommandItem>
-              </CommandGroup>
-            )}
-
             <CommandGroup heading="Actions">
               <CommandItem value="create new task" onSelect={() => run(onCreateTask)}>
                 <Plus />
@@ -105,6 +91,20 @@ export function CommandPalette({ open, onOpenChange, onCreateTask, onPlan }: Com
                 </CommandItem>
               ))}
             </CommandGroup>
+            {/* Free-text search is the fallback, so it sits below exact commands. */}
+            {trimmedQuery && (
+              <CommandGroup heading="Search">
+                <CommandItem
+                  value={`search tasks ${trimmedQuery}`}
+                  onSelect={() =>
+                    run(() => router.push(`/tasks?view=all&q=${encodeURIComponent(trimmedQuery)}`))
+                  }
+                >
+                  <Search />
+                  Search tasks for “{trimmedQuery}”
+                </CommandItem>
+              </CommandGroup>
+            )}
           </CommandList>
         </Command>
       </DialogContent>

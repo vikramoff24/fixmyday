@@ -11,7 +11,6 @@ import { askNavHref, primaryNavigation } from "@/config/navigation";
 import { cn } from "@/lib/utils/cn";
 import { useAppShell } from "./app-shell-context";
 import { isActivePath } from "./sidebar";
-import { ThemeToggle } from "./theme-toggle";
 import { UserMenu } from "./user-menu";
 
 export function MobileHeader() {
@@ -35,7 +34,6 @@ export function MobileHeader() {
             <Settings />
           </Link>
         </Button>
-        <ThemeToggle />
         <div className="ml-1">
           <UserMenu />
         </div>

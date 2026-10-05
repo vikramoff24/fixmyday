@@ -119,7 +119,7 @@ function TaskDetailBody({
   return (
     <div className="flex flex-col gap-6 px-5 pt-5 pb-8 md:pt-6">
       <div className="flex items-start gap-3 pr-8">
-        <div className="pt-1.5">
+        <div className="pt-2.5">
           <TaskCheckbox
             checked={completed}
             onCheckedChange={() => onToggleComplete(task)}
