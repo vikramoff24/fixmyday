@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 
+import { TASK_SEARCH_INPUT_ID } from "@/config/dom-ids";
 import { PlannerSheet } from "@/features/planner/components/planner-sheet";
 import { NewTaskDialog } from "@/features/tasks/components/new-task-dialog";
 import { useKeyboardShortcut } from "@/hooks/use-keyboard-shortcut";
@@ -10,9 +11,6 @@ import { AppShellContext, type AppShellActions } from "./app-shell-context";
 import { CommandPalette } from "./command-palette";
 import { MobileHeader, MobileTabBar } from "./mobile-nav";
 import { Sidebar } from "./sidebar";
-
-/** ID of the search field on the Tasks page, focused by the "/" shortcut. */
-export const TASK_SEARCH_INPUT_ID = "task-search";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const router = useRouter();

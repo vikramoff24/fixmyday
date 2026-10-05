@@ -6,6 +6,7 @@ import { useAppShell } from "@/components/layout/app-shell-context";
 import { useClock } from "@/components/providers/clock-provider";
 import { StateMessage } from "@/components/shared/state-message";
 import { Button } from "@/components/ui/button";
+import { PLANNER_INPUT_ID } from "@/config/dom-ids";
 import { PlannerPanel } from "@/features/planner/components/planner-panel";
 import { MOBILE_QUERY, useMediaQuery } from "@/hooks/use-media-query";
 import { useNowMinutes } from "@/hooks/use-now-minutes";
@@ -58,7 +59,7 @@ export function TodayView({ tasks: serverTasks, initialNowMinutes }: TodayViewPr
 
   function startPlanning() {
     if (isMobile) openPlanner();
-    else document.getElementById("planner-input")?.focus();
+    else document.getElementById(PLANNER_INPUT_ID)?.focus();
   }
 
   const hasTasks = todays.length > 0 || overdue.length > 0;

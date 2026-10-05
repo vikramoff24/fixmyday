@@ -5,6 +5,7 @@ import { useRef, type FormEvent } from "react";
 
 import { Spark } from "@/components/shared/spark";
 import { Button } from "@/components/ui/button";
+import { PLANNER_INPUT_ID } from "@/config/dom-ids";
 import { cn } from "@/lib/utils/cn";
 import { PLANNER_INPUT_MAX_LENGTH } from "../schemas/plan-schemas";
 
@@ -53,12 +54,12 @@ export function PlannerInput({
         onClick={() => textareaRef.current?.focus()}
       >
         <Spark className="pointer-events-none absolute top-[18px] left-4 size-[18px]" />
-        <label htmlFor="planner-input" className="sr-only">
+        <label htmlFor={PLANNER_INPUT_ID} className="sr-only">
           What&apos;s on your mind?
         </label>
         <textarea
           ref={textareaRef}
-          id="planner-input"
+          id={PLANNER_INPUT_ID}
           value={value}
           autoFocus={autoFocus}
           disabled={disabled}

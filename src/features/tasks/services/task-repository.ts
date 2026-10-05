@@ -1,5 +1,19 @@
 import "server-only";
-import { and, asc, between, desc, eq, ilike, inArray, isNotNull, lt, or, sql, type SQL } from "drizzle-orm";
+import {
+  and,
+  asc,
+  between,
+  desc,
+  eq,
+  gte,
+  ilike,
+  inArray,
+  isNotNull,
+  lt,
+  or,
+  sql,
+  type SQL,
+} from "drizzle-orm";
 
 import { getDb } from "@/lib/db/client";
 import { tasks, type NewTaskRow, type TaskRow } from "@/lib/db/schema";
@@ -70,17 +84,18 @@ export async function findTasksMatching(userId: string, filters: TaskFilters): P
     .limit(500);
 }
 
-/** Tasks completed or scheduled since `since` — the raw material for insights. */
-export async function findTasksSince(userId: string, since: Date): Promise<TaskRow[]> {
+/** Tasks completed, due or created since a point in time — the raw material for insights. */
+export async function findTasksSince(userId: string, since: Date, sinceDate: DateKey): Promise<TaskRow[]> {
   return getDb()
     .select()
     .from(tasks)
     .where(
       and(
         eq(tasks.userId, userId),
-        or(sql`${tasks.completedAt} >= ${since}`, sql`${tasks.createdAt} >= ${since}`),
+        or(gte(tasks.completedAt, since), gte(tasks.dueDate, sinceDate), gte(tasks.createdAt, since)),
       ),
-    );
+    )
+    .limit(2000);
 }
 
 export async function findTaskById(userId: string, taskId: string): Promise<TaskRow | undefined> {
