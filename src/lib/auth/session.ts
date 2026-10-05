@@ -1,6 +1,7 @@
 import "server-only";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 
 import { getServerEnv } from "@/config/env";
 import { isClerkEnabled } from "@/config/features";
@@ -18,6 +19,10 @@ export const LOCAL_DEV_USER_ID = "local-dev-user";
  * Never accept a user id from the client.
  */
 export async function getCurrentUserId(): Promise<string | null> {
+  // Who is asking is request-time information: never prerender or cache it,
+  // even in dev-user mode where no cookie or header is read.
+  await connection();
+
   if (!isClerkEnabled) {
     return getServerEnv().NODE_ENV === "production" ? null : LOCAL_DEV_USER_ID;
   }
