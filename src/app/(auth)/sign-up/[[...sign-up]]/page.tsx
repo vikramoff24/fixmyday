@@ -8,5 +8,6 @@ export const metadata: Metadata = { title: "Create your account" };
 
 export default function SignUpPage() {
   if (!isClerkEnabled) return <DevAuthNotice />;
-  return <SignUp fallbackRedirectUrl="/today" signInUrl="/sign-in" />;
+  // Always show Google's account chooser instead of reusing the last account.
+  return <SignUp fallbackRedirectUrl="/today" signInUrl="/sign-in" oidcPrompt="select_account" />;
 }
