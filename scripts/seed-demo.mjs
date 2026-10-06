@@ -37,6 +37,27 @@ function dateKeyFor(date) {
   }).format(date);
 }
 
+// The instant when the wall clock in `timeZone` reads `dateKey` at hour:minute.
+function zonedTime(dateKey, hour, minute) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  const guess = new Date(Date.UTC(year, month - 1, day, hour, minute));
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      hourCycle: "h23",
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    })
+      .formatToParts(guess)
+      .map((part) => [part.type, Number(part.value)]),
+  );
+  const wallAsUtc = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute);
+  return new Date(guess.getTime() - (wallAsUtc - guess.getTime()));
+}
+
 // Deterministic pseudo-random numbers so every seed looks the same.
 let state = 42;
 function random() {
