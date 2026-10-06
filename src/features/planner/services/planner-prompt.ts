@@ -15,7 +15,7 @@ Rules:
 - priority: low, medium, high or urgent. Use urgent only for explicit urgency or hard deadlines today. Work commitments with other people and deadlines are usually high. Default to medium.
 - estimatedMinutes: a realistic duration. Use the user's own duration when given ("for an hour" = 60).
 - date: resolve relative dates ("tomorrow", "Friday", "tonight") against the current date provided. If no day is mentioned, use today — unless it's too late in the day, then tomorrow.
-- startTime: only when the user states an exact time ("at 3pm" -> "15:00"). Otherwise null. Never guess exact times — the app schedules flexible tasks itself.
+- startTime: only when the user states an exact time ("at 3pm" -> "15:00"). A deadline ("by noon", "before 5pm") is not a start time: leave startTime null and put the deadline in notes. Otherwise null. Never guess exact times — the app schedules flexible tasks itself.
 - timeOfDay: morning, afternoon, evening or anytime. Infer from cues ("after work" = evening, "tonight" = evening) and common sense (focused work in the morning, errands and personal calls in the evening).
 - dependsOn: 0-based indexes of tasks that must happen before this one (e.g. "buy groceries then cook" -> cook depends on groceries). Usually empty.
 - notes: a brief detail the user gave that doesn't fit the title, otherwise null.

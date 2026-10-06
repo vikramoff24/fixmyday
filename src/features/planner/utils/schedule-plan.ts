@@ -58,11 +58,21 @@ export function schedulePlan(tasks: UnderstoodTask[], context: ScheduleContext):
     });
   }
 
-  // 1. Pinned tasks keep the time the user gave.
+  // 1. Pinned tasks keep the time the user gave — unless it has already passed,
+  //    in which case they're scheduled like flexible tasks below.
+  const pinnedKeys = new Set<string>();
   for (const task of tasks) {
     if (task.fixedStartMinutes === null) continue;
 
     const start = task.fixedStartMinutes;
+    if (isInPast(task.date, start, context)) {
+      warnings.push(
+        `${task.title} was set for ${formatMinutes(start)}, which has already passed, so I found the next free time.`,
+      );
+      continue;
+    }
+    pinnedKeys.add(task.key);
+
     const end = start + task.estimatedMinutes;
     const clash = findOverlap(occupied.get(task.date) ?? [], start, end);
     if (clash) {
@@ -75,7 +85,7 @@ export function schedulePlan(tasks: UnderstoodTask[], context: ScheduleContext):
   }
 
   // 2. Flexible tasks, most important first, once their dependencies are placed.
-  const pending = tasks.filter((task) => task.fixedStartMinutes === null);
+  const pending = tasks.filter((task) => !pinnedKeys.has(task.key));
   const knownKeys = new Set(tasks.map((task) => task.key));
 
   while (pending.length > 0) {
@@ -241,6 +251,10 @@ function findSlotForTask(
     if (start !== null) return { date, start };
   }
   return null;
+}
+
+function isInPast(date: DateKey, startMinutes: number, context: ScheduleContext): boolean {
+  return date < context.todayKey || (date === context.todayKey && startMinutes < context.nowMinutes);
 }
 
 /** The plannable part of a day, or null when nothing is left of it. */

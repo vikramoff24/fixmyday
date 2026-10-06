@@ -87,6 +87,17 @@ describe("schedulePlan", () => {
     expect(result.tasks[0]).toMatchObject({ date: TODAY, startMinutes: at(14, 15) });
   });
 
+  it("doesn't pin a task to a time that has already passed today", () => {
+    const result = schedulePlan(
+      [makeTask({ key: "pr", title: "Finish PR", date: TODAY, fixedStartMinutes: at(12) })],
+      { ...baseContext, nowMinutes: at(14, 7) },
+    );
+    expect(result.tasks[0]).toMatchObject({ date: TODAY, startMinutes: at(14, 15), isPinned: false });
+    expect(result.warnings).toEqual([
+      "Finish PR was set for 12:00, which has already passed, so I found the next free time.",
+    ]);
+  });
+
   it("schedules dependants after the task they depend on", () => {
     const result = schedulePlan(
       [
