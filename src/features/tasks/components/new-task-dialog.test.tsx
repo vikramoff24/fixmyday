@@ -48,6 +48,24 @@ describe("NewTaskDialog", () => {
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false));
   });
 
+  it("schedules the task on the date picked from the calendar", async () => {
+    const user = userEvent.setup();
+    actions.createTaskAction.mockResolvedValue({ ok: true, data: {} });
+    renderWithProviders(<NewTaskDialog open onOpenChange={vi.fn()} />);
+
+    await user.type(screen.getByLabelText("Title"), "Pay rent");
+    await user.click(screen.getByLabelText("Date"));
+    await user.click(screen.getByRole("button", { name: "Tomorrow" }));
+    expect(screen.getByLabelText("Date")).toHaveTextContent("Tomorrow · Tue, Oct 6");
+
+    await user.click(screen.getByRole("button", { name: "Create task" }));
+    await waitFor(() =>
+      expect(actions.createTaskAction).toHaveBeenCalledWith(
+        expect.objectContaining({ dueDate: "2026-10-06" }),
+      ),
+    );
+  });
+
   it("keeps the dialog open and shows the error when saving fails", async () => {
     const user = userEvent.setup();
     const onOpenChange = vi.fn();

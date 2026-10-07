@@ -5,6 +5,7 @@ import { useState, type ReactNode } from "react";
 
 import { useClock } from "@/components/providers/clock-provider";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
@@ -210,12 +211,14 @@ function TaskDetailBody({
         </PropertyRow>
 
         <PropertyRow label="Date" htmlFor="task-date">
-          <Input
+          <DatePicker
             id="task-date"
-            type="date"
+            size="sm"
             value={task.dueDate ?? ""}
-            onChange={(event) => saveSchedule(event.target.value, startTime)}
-            className={`h-8 text-[13px] ${quietControl}`}
+            onChange={(dueDate) => saveSchedule(dueDate, startTime)}
+            placeholder="No date"
+            clearable
+            className={quietControl}
           />
         </PropertyRow>
 

@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { useClock } from "@/components/providers/clock-provider";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Dialog,
   DialogContent,
@@ -130,11 +131,19 @@ export function NewTaskDialog({ open, onOpenChange }: NewTaskDialogProps) {
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="new-task-date">Date</Label>
-              <Input
-                id="new-task-date"
-                type="date"
-                aria-invalid={Boolean(errors.dueDate)}
-                {...form.register("dueDate")}
+              <Controller
+                control={form.control}
+                name="dueDate"
+                render={({ field }) => (
+                  <DatePicker
+                    id="new-task-date"
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="No date"
+                    clearable
+                    aria-invalid={Boolean(errors.dueDate)}
+                  />
+                )}
               />
               {errors.dueDate && <p className="text-xs text-destructive">{errors.dueDate.message}</p>}
             </div>

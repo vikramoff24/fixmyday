@@ -1,12 +1,16 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { motion } from "motion/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { useAppShell } from "@/components/layout/app-shell-context";
 import { useClock } from "@/components/providers/clock-provider";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { TaskDetailPanel } from "@/features/tasks/components/task-detail-panel";
 import { useOptimisticTasks } from "@/features/tasks/hooks/use-optimistic-tasks";
 import type { Task } from "@/features/tasks/types";
@@ -41,7 +45,11 @@ export function CalendarView({ view, date, tasks: serverTasks, initialNowMinutes
     useOptimisticTasks(serverTasks);
   const [openTaskId, setOpenTaskId] = useState<string | null>(null);
 
+  const router = useRouter();
+  const [jumpOpen, setJumpOpen] = useState(false);
+
   const days = getVisibleDays(view, date);
+  const showsToday = days.includes(todayKey);
   const openTask = tasks.find((task) => task.id === openTaskId) ?? null;
 
   function handleMove(task: Task, targetDate: DateKey, startMinutes: number) {
@@ -50,14 +58,41 @@ export function CalendarView({ view, date, tasks: serverTasks, initialNowMinutes
 
   return (
     <div className="flex w-full flex-col gap-5 px-4 pt-8 pb-6 md:px-8 md:pt-10">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold tracking-tight md:text-[28px]">Calendar</h1>
-          <p className="mt-1 text-[15px] text-muted-foreground">{rangeLabel(view, days)}</p>
+          <Popover open={jumpOpen} onOpenChange={setJumpOpen}>
+            <PopoverTrigger
+              aria-label={`${rangeLabel(view, days)}. Jump to a date`}
+              className="group mt-1 -ml-1.5 flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 text-[15px] text-muted-foreground transition-colors hover:bg-hover hover:text-foreground data-[state=open]:bg-hover data-[state=open]:text-foreground"
+            >
+              <span className="tabular-nums">{rangeLabel(view, days)}</span>
+              <ChevronDown
+                aria-hidden
+                className="size-4 text-subtle-foreground transition-transform duration-200 group-data-[state=open]:rotate-180"
+              />
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-auto p-3">
+              <Calendar
+                value={date}
+                today={todayKey}
+                highlighted={view === "week" ? days : undefined}
+                autoFocus
+                onSelect={(next) => {
+                  setJumpOpen(false);
+                  router.push(calendarHref(view, next));
+                }}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
 
         <div className="flex items-center gap-2">
-          <div role="tablist" aria-label="Calendar view" className="flex rounded-lg bg-hover p-0.5">
+          <div
+            role="tablist"
+            aria-label="Calendar view"
+            className="flex rounded-lg border border-border bg-hover p-0.5"
+          >
             {CALENDAR_VIEWS.map((mode) => (
               <Link
                 key={mode}
@@ -65,19 +100,24 @@ export function CalendarView({ view, date, tasks: serverTasks, initialNowMinutes
                 aria-selected={mode === view}
                 href={calendarHref(mode, date)}
                 className={cn(
-                  "flex h-7 items-center rounded-md px-3 text-[13px] font-medium capitalize transition-colors",
-                  mode === view
-                    ? "bg-card text-foreground shadow-sm dark:bg-selected"
-                    : "text-muted-foreground hover:text-foreground",
+                  "relative flex h-7 items-center rounded-md px-3 text-[13px] font-medium capitalize transition-colors",
+                  mode === view ? "text-foreground" : "text-muted-foreground hover:text-foreground",
                 )}
               >
-                {mode}
+                {mode === view && (
+                  <motion.span
+                    layoutId="calendar-view-pill"
+                    aria-hidden
+                    className="absolute inset-0 rounded-md bg-card shadow-sm dark:bg-selected"
+                  />
+                )}
+                <span className="relative">{mode}</span>
               </Link>
             ))}
           </div>
 
-          <div className="flex items-center">
-            <Button asChild variant="ghost" size="icon-sm">
+          <div className="flex items-center rounded-lg border border-border p-0.5">
+            <Button asChild variant="ghost" size="icon-sm" className="size-7">
               <Link
                 href={calendarHref(view, shiftCalendarDate(view, date, -1))}
                 aria-label={`Previous ${view}`}
@@ -89,11 +129,13 @@ export function CalendarView({ view, date, tasks: serverTasks, initialNowMinutes
               asChild
               variant="ghost"
               size="sm"
-              className={cn(days.includes(todayKey) && "text-foreground")}
+              className={cn("h-7 px-2.5", showsToday && "text-foreground")}
             >
-              <Link href={calendarHref(view, todayKey)}>Today</Link>
+              <Link href={calendarHref(view, todayKey)} aria-current={showsToday ? "date" : undefined}>
+                Today
+              </Link>
             </Button>
-            <Button asChild variant="ghost" size="icon-sm">
+            <Button asChild variant="ghost" size="icon-sm" className="size-7">
               <Link href={calendarHref(view, shiftCalendarDate(view, date, 1))} aria-label={`Next ${view}`}>
                 <ChevronRight />
               </Link>
