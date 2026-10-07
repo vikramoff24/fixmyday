@@ -68,3 +68,20 @@ export function getGreeting(minutesOfDay: number): string {
   if (minutesOfDay < 18 * 60) return "Good afternoon";
   return "Good evening";
 }
+
+/** "October 2026" */
+export function formatMonthYear(dateKey: DateKey): string {
+  return new Intl.DateTimeFormat(LOCALE, { timeZone: "UTC", month: "long", year: "numeric" }).format(
+    dateKeyToUtcNoon(dateKey),
+  );
+}
+
+/** "Mon, Oct 5" */
+export function formatMediumDate(dateKey: DateKey): string {
+  return new Intl.DateTimeFormat(LOCALE, {
+    timeZone: "UTC",
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  }).format(dateKeyToUtcNoon(dateKey));
+}

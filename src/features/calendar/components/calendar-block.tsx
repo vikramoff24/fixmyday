@@ -60,12 +60,12 @@ export function CalendarBlock({
       {...handlers}
       aria-label={`${task.title}, ${formatWeekdayLong(days[shown.dayIndex])} ${timeRange}. Arrow keys move it.`}
       className={cn(
-        "absolute flex cursor-grab touch-manipulation flex-col overflow-hidden rounded-md border px-2 text-left select-none",
-        "transition-[box-shadow,opacity] duration-150 hover:shadow-input focus-visible:z-20",
+        "group/block absolute flex cursor-grab touch-manipulation flex-col overflow-hidden rounded-lg border pr-2 pl-3 text-left backdrop-blur-[2px] select-none",
+        "transition-[box-shadow,opacity,filter] duration-200 ease-out-quint hover:z-10 hover:shadow-input hover:brightness-[1.04] focus-visible:z-20",
         categoryTintClass[task.category],
         isShort ? "justify-center py-0.5" : "py-1.5",
         completed && "opacity-55",
-        isDragging && "z-30 cursor-grabbing shadow-elevated ring-1 ring-ring/60",
+        isDragging && "z-30 cursor-grabbing shadow-elevated ring-2 ring-ring/50",
       )}
       style={{
         top,
@@ -76,8 +76,11 @@ export function CalendarBlock({
         width: `calc(${100 / laneCount}% - 4px)`,
       }}
     >
+      <span
+        aria-hidden
+        className={cn("absolute inset-y-1 left-1 w-[3px] rounded-full", categoryDotClass[task.category])}
+      />
       <span className="flex min-w-0 items-center gap-1.5">
-        <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", categoryDotClass[task.category])} />
         <span className={cn("truncate text-xs font-medium", completed && "line-through")}>{task.title}</span>
       </span>
       {!isShort && (
