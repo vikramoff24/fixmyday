@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, SearchX } from "lucide-react";
+import { Download, Plus, SearchX } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 
@@ -70,10 +70,19 @@ export function TasksView({ tasks: serverTasks, filters, autoFocusSearch }: Task
           <h1 className="text-2xl font-semibold tracking-tight md:text-[28px]">Tasks</h1>
           <p className="mt-1 text-[15px] text-muted-foreground">{countLabel}</p>
         </div>
-        <Button onClick={openNewTask} size="sm">
-          <Plus />
-          New task
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button asChild variant="secondary" size="sm">
+            {/* A plain link so the browser handles the download natively. */}
+            <a href="/api/tasks/export" download>
+              <Download />
+              Export
+            </a>
+          </Button>
+          <Button onClick={openNewTask} size="sm">
+            <Plus />
+            New task
+          </Button>
+        </div>
       </header>
 
       <TaskFiltersBar filters={filters} autoFocusSearch={autoFocusSearch} onChange={setFilters} />
